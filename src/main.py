@@ -26,7 +26,7 @@ def task1_fun(shares):
     """!
     Task which puts things into a share and a queue.
     @param shares A list holding the share and queue used by this task
-    """
+    """ 
     #Encoder initializing. Includes defining the timer and the pins for our encoder class
     pinB6 = pyb.Pin(pyb.Pin.board.PB6, pyb.Pin.IN)
     pinB7 = pyb.Pin(pyb.Pin.board.PB7, pyb.Pin.IN)
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     # allocated for state transition tracing, and the application will run out
     # of memory after a while and quit. Therefore, use tracing only for 
     # debugging and set trace to False when it's not needed
-    task1 = cotask.Task(task1_fun, name="Task_1", priority=1, period=400,
+    task1 = cotask.Task(task1_fun, name="Task_1", priority=1, period=10,
                         profile=True, trace=False, shares=(share0, q0))
     task2 = cotask.Task(task2_fun, name="Task_2", priority=2, period=1500,
                         profile=True, trace=False, shares=(share0, q0))
