@@ -15,20 +15,46 @@ import pyb
 import cotask
 import task_share
 
+import utime
+
+import motor_driver    #Classes we have written for driving the motor and reading the encoder
+import encoder_reader
+import porportional_controller
+
 
 def task1_fun(shares):
     """!
     Task which puts things into a share and a queue.
     @param shares A list holding the share and queue used by this task
     """
-    # Get references to the share and queue which have been passed to this task
-    my_share, my_queue = shares
-
-    counter = 0
+    #Encoder initializing. Includes defining the timer and the pins for our encoder class
+    pinB6 = pyb.Pin(pyb.Pin.board.PB6, pyb.Pin.IN)
+    pinB7 = pyb.Pin(pyb.Pin.board.PB7, pyb.Pin.IN)
+    timer = pyb.Timer(4, prescaler=0, period=0xFFFF)
+    ch1 = timer.channel (1, pyb.Timer.ENC_AB, pin=pinB6)
+    ch2 = timer.channel (2, pyb.Timer.ENC_AB, pin=pinB7)
+    
+    #calling the encoder class, then calling the zero() function to zero the encoder
+    encode = encoder_reader.Encoder(pinB6, pinB7, timer, ch1, ch2)
+    encode.zero()
+    
+    #Motor driver initializing. Includes defining pin and setting up the PWM timer
+    pinB4 = pyb.Pin(pyb.Pin.board.PB4, pyb.Pin.OUT_PP)
+    pinB5 = pyb.Pin(pyb.Pin.board.PB5, pyb.Pin.OUT_PP)
+    pinA10 = pyb.Pin(pyb.Pin.board.PA10, pyb.Pin.OUT_PP)
+    timer = pyb.Timer (3, freq=10000)
+     
+    #calling the motor driver class and giving the object name "moe"
+    moe = motor_driver.MotorDriver(pinA10,pinB4,pinB5, timer)
+    
+    controller = porportional_controller.PorportionalController(.01, 0)
+    
     while True:
-        my_share.put(counter)
-        my_queue.put(counter)
-        counter += 1
+        position = encode.read()
+        control_output = controller.run(-100, position)
+
+        print(control_output)
+        moe.set_duty_cycle(control_output)
 
         yield 0
 
