@@ -47,7 +47,7 @@ def task1_fun(shares):
     #calling the motor driver class and giving the object name "moe"
     moe = motor_driver.MotorDriver(pinA10,pinB4,pinB5, timer)
     
-    controller = porportional_controller.PorportionalController(.01, 0)
+    controller = porportional_controller.PorportionalController(.01)
     
     while True:
         position = encode.read()
@@ -82,7 +82,7 @@ def task2_fun(shares):
     #calling the motor driver class and giving the object name "moe"
     moe2 = motor_driver.MotorDriver(pinC1,pinA0,pinA1, timer5)
     
-    controller2 = porportional_controller.PorportionalController(.01, 0)
+    controller2 = porportional_controller.PorportionalController(.01)
     
     while True:
         position2 = encode2.read()
