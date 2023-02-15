@@ -1,6 +1,6 @@
-# Lab 2
+# Lab 3
 
-## Serial Communication with Proportional Controlled Motor
+## Time Scheduled Multitasking
 
 ### By: Benny Cruz, Arfan Ansar, Noah Johnson
 
