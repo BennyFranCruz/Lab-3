@@ -7,7 +7,7 @@ using the ST_Link. This data is processed and results are graphed in this file.
 TODO: N/A 
 
 @author Mech-07
-@date   2-Jan-2023 SPL Original file
+@date   2-15-23
 @copyright (c) 2023 by Mech-07 and released under GNU Public License v3
 """
 import serial

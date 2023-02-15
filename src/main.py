@@ -1,13 +1,15 @@
 """!
-@file basic_tasks.py
-    This file contains a demonstration program that runs some tasks, an
-    inter-task shared variable, and a queue. The tasks don't really @b do
-    anything; the example just shows how these elements are created and run.
+@file main.py
+    This file contains two tasks that involve setting up encoders and motor drivers.
+    It allows for both motors to be proportionally controlled while the code is being run
+    through the use of generator object and task priority and sequencing. Main file for
+    lab 3
 
-@author JR Ridgely
-@date   2021-Dec-15 JRR Created from the remains of previous example
-@copyright (c) 2015-2021 by JR Ridgely and released under the GNU
-    Public License, Version 2. 
+TODO: N/A
+
+@author Mech-07 and JR Ridgely
+@date   10-Feb-2023
+@copyright (c) 2023 by Mech-07 and JR Ridgely and released under GNU Public License v3
 """
 
 import gc
@@ -24,7 +26,8 @@ import porportional_controller
 
 def task1_fun(shares):
     """!
-    Task which puts things into a share and a queue.
+    Task sets up the first motor and encoder and runs a proportional
+    controller with a set position on this motor. 
     @param shares A list holding the share and queue used by this task
     """ 
     #Encoder initializing. Includes defining the timer and the pins for our encoder class
@@ -54,25 +57,27 @@ def task1_fun(shares):
     
     
     while True:
-        position = encode.read()
-        control_output = controller.run(20000, position)
+        position = encode.read() #find current position
+        control_output = controller.run(20000, position) #run control
 
         print(control_output)
-        moe.set_duty_cycle(control_output)
+        moe.set_duty_cycle(control_output) #set the duty cycle to value found from control
         
-        time = utime.ticks_ms() - inittime
-        pos = position
+        time = utime.ticks_ms() - inittime #find the current time
+        pos = position #find the current position
         
-        timedata = time
+        timedata = time 
         posdata = pos
-        u2.write(f'{timedata},{posdata}\r\n')
+        u2.write(f'{timedata},{posdata}\r\n') #send data to computer 
     
-        yield 0
+        yield 0 #return nothing
 
 
 def task2_fun(shares):
     """!
-    Task Runs Motor 2 and Proportional Controller
+    Task sets up a second motor and encoder and runs a proportional
+    controller with a set position on this motor. 
+    @param shares A list holding the share and queue used by this task
     """ 
     pinC6 = pyb.Pin(pyb.Pin.board.PC6, pyb.Pin.IN)
     pinC7 = pyb.Pin(pyb.Pin.board.PC7, pyb.Pin.IN)
@@ -96,13 +101,13 @@ def task2_fun(shares):
     controller2 = porportional_controller.PorportionalController(.025)
     
     while True:
-        position2 = encode2.read()
-        control_output2 = controller2.run(-30000, position2)
+        position2 = encode2.read() #find current position
+        control_output2 = controller2.run(-30000, position2) #run controller 
 
         #print(control_output2)
-        moe2.set_duty_cycle(control_output2)
+        moe2.set_duty_cycle(control_output2) 
 
-        yield 0
+        yield 0 #return nothing
 
     
 # This code creates a share, a queue, and two tasks, then starts the tasks. The
@@ -135,6 +140,7 @@ if __name__ == "__main__":
     
     # Run the scheduler with the chosen scheduling algorithm. Quit if ^C pressed
     
+    #set up UART and send the data to the computer 
     u2 = pyb.UART(2, baudrate=115200, timeout= 50)
     
     i=0
@@ -144,7 +150,8 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             break
         i += 1
-        
+    
+    #send end to computer when data sent 
     u2.write(f'end,end\r\n')
     
     # Print a table of task data and a table of shared information data
