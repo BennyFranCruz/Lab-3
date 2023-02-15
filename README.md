@@ -14,6 +14,10 @@ gotten worse compared to the optimal response. This is done to choose
 an optimal run rate for the motor control task. The plots for both
 the .....response and .....response can be seen below.
 
+A task was created to run two motors simultaneously under closed-loop
+control. This test program moves the motors different distances and holds
+them at the desired positions.
+
 ![Optimal_Response](Optimal_Response.png)
 
 ![Slow_Settling](Slow_Settling.png)
