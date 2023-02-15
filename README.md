@@ -4,29 +4,15 @@
 
 ### By: Benny Cruz, Arfan Ansar, Noah Johnson
 
-The closed loop controller implemented in our design is a classic
-proportional control. The proportional controller takes the current
-position of the motor and finds the difference between this value and
-the value that the motor is set to rest at. This difference is
-multiplyed by a constant value (A proportion) that determines how much
-the motor should actuate or move to get to the desired final position.
+We began by downloading the cotask, taskshare, and basic task files
+from the ME 405 support repository on Github.
 
-The desired response of a proportional controller is one without too
-much overshoot [^1] and with a small settling time. [^2]
-
-We find these metrics by recording the time at intervals and the
-cooresponding position of the motor and graphing these. In our
-experiment we first graphed a response with large overshoot which
-resulted in ringing. We then found a slow response time where the
-settling time was large and did not reach the desired position quickly.
-After testing these scenarios we then set out to find the best of both
-worlds, with small overshoot, little ringing, and a fast settling time.
-
-[^1]: (Overshoot is when the motors position goes over the desired
-    position).
-
-[^2]: (Settling time is the amount of time the motor takes to reach rest
-    at the desired position)
+Similar to lab 2 we run the motor task and pint the results and
+plot the step response. The task is continuously run at a slower 
+and slower rate until the controller's performance has significantly
+gotten worse compared to the optimal response. This is done to choose
+an optimal run rate for the motor control task. The plots for both
+the .....response and .....response can be seen below.
 
 ![Optimal_Response](Optimal_Response.png)
 
