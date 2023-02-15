@@ -15,6 +15,8 @@ import pyb
 import cotask
 import task_share
 
+import matplotlib.pyplot as plt
+
 import utime
 
 import motor_driver    #Classes we have written for driving the motor and reading the encoder
@@ -49,13 +51,25 @@ def task1_fun(shares):
     
     controller = porportional_controller.PorportionalController(.01)
     
+    
+    inittime = utime.ticks_ms()
+    time = [0]
+    pos = [0]
+    
+    
     while True:
         position = encode.read()
         control_output = controller.run(-100, position)
 
-        print(control_output)
+        #print(control_output)
         moe.set_duty_cycle(control_output)
-
+        
+        time = utime.ticks_ms() - inittime
+        pos = position
+        
+        timedata.append(time)
+        posdata.append(pos)
+    
         yield 0
 
 
@@ -93,7 +107,7 @@ def task2_fun(shares):
 
         yield 0
 
-
+    
 # This code creates a share, a queue, and two tasks, then starts the tasks. The
 # tasks run until somebody presses ENTER, at which time the scheduler stops and
 # printouts show diagnostic information about the tasks, share, and queue.
@@ -120,16 +134,32 @@ if __name__ == "__main__":
     # Run the memory garbage collector to ensure memory is as defragmented as
     # possible before the real-time scheduler is started
     gc.collect()
-
+    
+    
     # Run the scheduler with the chosen scheduling algorithm. Quit if ^C pressed
-    while True:
+    
+    timedata = []
+    posdata = []
+    
+    i = 0
+    
+    while i < 10000:
+        
         try:
             cotask.task_list.pri_sched()
         except KeyboardInterrupt:
             break
-
+        
+        i += 1
+    
+    plt.plot(timedata, posdata)
+    plt.suptitle('Slow Settling Response')
+    plt.xlabel('Time')
+    plt.ylabel('Position')
+    plt.show()
+    
     # Print a table of task data and a table of shared information data
-    print('\n' + str (cotask.task_list))
-    print(task_share.show_all())
-    print(task1.get_trace())
-    print('')
+    #print('\n' + str (cotask.task_list))
+    #print(task_share.show_all())
+    #print(task1.get_trace())
+    #print('')
