@@ -93,11 +93,11 @@ def task2_fun(shares):
     #calling the motor driver class and giving the object name "moe"
     moe2 = motor_driver.MotorDriver(pinC1,pinA0,pinA1, timer5)
     
-    controller2 = porportional_controller.PorportionalController(.01)
+    controller2 = porportional_controller.PorportionalController(.025)
     
     while True:
         position2 = encode2.read()
-        control_output2 = controller2.run(-100, position2)
+        control_output2 = controller2.run(-30000, position2)
 
         #print(control_output2)
         moe2.set_duty_cycle(control_output2)
