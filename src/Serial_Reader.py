@@ -26,18 +26,12 @@ def main():
     @returns none
     """
     
-    #opens serial connection as s_port and waits for user input which is then sent to the microcontroller
-    with serial.Serial ('COM6', baudrate=115200, timeout=1000) as s_port:
-        input1 = input('kp Value ')
-        input1 = bytes(input1, 'utf-8')
-        s_port.write(input1)
-    
     #initilize data arrays for time and position to be saved to
     x_data = []
     y_data = []
     
     #reopens the serial connection as s_port
-    with serial.Serial ('COM6', 115200) as s_port:
+    with serial.Serial ('COM4', 115200) as s_port:
         while (True):
             #in this loop it reads data and converts it into an array with position 0 having the time data and
             #position 1 having the position data
@@ -61,7 +55,7 @@ def main():
     
     #use matplotlib to plot the data as time vs position. Label the plot and axis and show this plot
     plt.plot(x_data, y_data)
-    plt.suptitle('Slow Settling Response')
+    plt.suptitle('Slower Rate with Bad Response')
     plt.xlabel('Time')
     plt.ylabel('Position')
     plt.show()
