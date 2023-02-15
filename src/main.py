@@ -15,8 +15,6 @@ import pyb
 import cotask
 import task_share
 
-import matplotlib.pyplot as plt
-
 import utime
 
 import motor_driver    #Classes we have written for driving the motor and reading the encoder
@@ -49,26 +47,25 @@ def task1_fun(shares):
     #calling the motor driver class and giving the object name "moe"
     moe = motor_driver.MotorDriver(pinA10,pinB4,pinB5, timer)
     
-    controller = porportional_controller.PorportionalController(.01)
+    controller = porportional_controller.PorportionalController(.025)
     
     
     inittime = utime.ticks_ms()
-    time = [0]
-    pos = [0]
     
     
     while True:
         position = encode.read()
-        control_output = controller.run(-100, position)
+        control_output = controller.run(20000, position)
 
-        #print(control_output)
+        print(control_output)
         moe.set_duty_cycle(control_output)
         
         time = utime.ticks_ms() - inittime
         pos = position
         
-        timedata.append(time)
-        posdata.append(pos)
+        timedata = time
+        posdata = pos
+        u2.write(f'{timedata},{posdata}\r\n')
     
         yield 0
 
@@ -102,7 +99,7 @@ def task2_fun(shares):
         position2 = encode2.read()
         control_output2 = controller2.run(-100, position2)
 
-        print(control_output2)
+        #print(control_output2)
         moe2.set_duty_cycle(control_output2)
 
         yield 0
@@ -124,9 +121,9 @@ if __name__ == "__main__":
     # allocated for state transition tracing, and the application will run out
     # of memory after a while and quit. Therefore, use tracing only for 
     # debugging and set trace to False when it's not needed
-    task1 = cotask.Task(task1_fun, name="Task_1", priority=1, period=10,
+    task1 = cotask.Task(task1_fun, name="Task_1", priority=1, period=25,
                         profile=True, trace=False, shares=(share0, q0))
-    task2 = cotask.Task(task2_fun, name="Task_2", priority=2, period=15,
+    task2 = cotask.Task(task2_fun, name="Task_2", priority=2, period=25,
                         profile=True, trace=False, shares=(share0, q0))
     cotask.task_list.append(task1)
     cotask.task_list.append(task2)
@@ -138,25 +135,17 @@ if __name__ == "__main__":
     
     # Run the scheduler with the chosen scheduling algorithm. Quit if ^C pressed
     
-    timedata = []
-    posdata = []
+    u2 = pyb.UART(2, baudrate=115200, timeout= 50)
     
-    i = 0
-    
-    while i < 10000:
-        
+    i=0
+    while i < 3000:
         try:
             cotask.task_list.pri_sched()
         except KeyboardInterrupt:
             break
-        
         i += 1
-    
-    plt.plot(timedata, posdata)
-    plt.suptitle('Slow Settling Response')
-    plt.xlabel('Time')
-    plt.ylabel('Position')
-    plt.show()
+        
+    u2.write(f'end,end\r\n')
     
     # Print a table of task data and a table of shared information data
     #print('\n' + str (cotask.task_list))
