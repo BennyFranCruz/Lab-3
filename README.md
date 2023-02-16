@@ -18,8 +18,6 @@ A task was created to run two motors simultaneously under closed-loop
 control. This test program moves the motors different distances and holds
 them at the desired positions.
 
-![Optimal_Response](Optimal_Response.png)
+![Slower_Rate_with_Bad_Response](Slower Rate with Bad Response.png)
 
-![Slow_Settling](Slow_Settling.png)
-
-![Ringing_Response](Ringing_Response.png)
+![Slowest_Rate_for_Good_Response](Slowest Rate for Good Response.png)
