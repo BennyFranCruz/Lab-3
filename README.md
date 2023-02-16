@@ -12,7 +12,8 @@ plot the step response. The task is continuously run at a slower
 and slower rate until the controller's performance has significantly
 gotten worse compared to the optimal response. This is done to choose
 an optimal run rate for the motor control task. The plots for both
-the .....response and .....response can be seen below.
+the slower rate with the bad response (period = 60 ms) and the slowest rate for a 
+good response (period = 25 ms) can be seen below.
 
 A task was created to run two motors simultaneously under closed-loop
 control. This test program moves the motors different distances and holds
